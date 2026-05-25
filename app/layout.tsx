@@ -29,7 +29,7 @@ export default function RootLayout({
         <Navbar />
         <div className="flex flex-1 overflow-hidden">
           <Sidebar />
-          <main className="flex-1 overflow-y-auto w-full relative">
+          <main className="flex-1 overflow-y-auto overflow-x-hidden w-full relative">
             {children}
             <Footer />
           </main>

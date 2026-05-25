@@ -75,15 +75,24 @@ export default function Sidebar() {
   return (
     <AnimatePresence mode="wait">
       {isOpen && (
-        <motion.aside
-          initial={{ x: -260, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: -260, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className={cn(
-            "fixed inset-y-0 left-0 z-40 pt-16 w-[260px] glass bg-background/95 lg:relative lg:pt-0 lg:flex-shrink-0 flex flex-col border-r border-border h-full lg:h-[calc(100vh-4rem)]"
-          )}
-        >
+        <>
+          {/* Mobile Backdrop */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSidebarOpen(false)}
+            className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"
+          />
+          <motion.aside
+            initial={{ x: -260, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -260, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className={cn(
+              "fixed inset-y-0 left-0 z-40 pt-16 w-[260px] glass bg-background/95 lg:relative lg:pt-0 lg:flex-shrink-0 flex flex-col border-r border-border h-full lg:h-[calc(100vh-4rem)]"
+            )}
+          >
           <div className="p-4 border-b border-border">
             <div className="text-xs font-semibold text-zinc-400 mb-2 uppercase tracking-wider">Progress</div>
             <div className="flex items-center justify-between text-sm mb-2">
@@ -178,6 +187,7 @@ export default function Sidebar() {
             })}
           </div>
         </motion.aside>
+        </>
       )}
     </AnimatePresence>
   );

@@ -286,7 +286,11 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
                 <h3 className="text-2xl font-bold text-white">Interactive Visualization</h3>
                 <NeonBadge variant="primary" className="animate-pulse">Live Demo</NeonBadge>
               </div>
-              <VisualizerComponent />
+              <div className="overflow-x-auto custom-scrollbar bg-black/50 border border-white/10 rounded-2xl shadow-2xl relative w-full">
+                <div className="min-w-[800px] w-full relative">
+                  <VisualizerComponent />
+                </div>
+              </div>
             </motion.div>
           )}
 
