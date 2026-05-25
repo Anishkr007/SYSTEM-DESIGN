@@ -8,7 +8,10 @@ import NeonBadge from "@/components/ui/NeonBadge";
 import InterviewQA from "@/components/ui/InterviewQA";
 import dynamic from "next/dynamic";
 import { useSidebarStore } from "@/store/useSidebarStore";
-
+import { topicsV2 } from "@/data/topics-v2";
+import { topicsV3 } from "@/data/topics-v3";
+import AiExplainerButton from "@/components/ai/AiExplainerButton";
+import { useGamificationStore } from "@/store/useGamificationStore";
 // Dynamically import visualizers based on type
 const visualizers = {
   "round-robin": dynamic(() => import("@/components/visualizers/RoundRobinViz")),
@@ -18,8 +21,41 @@ const visualizers = {
   "db-sharding": dynamic(() => import("@/components/visualizers/ShardingViz")),
   "envelope-calc": dynamic(() => import("@/components/visualizers/EnvelopeCalcViz")),
   "arch-playground": dynamic(() => import("@/components/visualizers/ArchPlayground")),
+  "url-shortener": dynamic(() => import("@/components/visualizers/UrlShortenerViz")),
+  "notification-system": dynamic(() => import("@/components/visualizers/NotificationFlowViz")),
+  "kafka": dynamic(() => import("@/components/visualizers/KafkaClusterViz")),
+  "caching-simulator": dynamic(() => import("@/components/visualizers/CacheSimulatorViz")),
+  "auth-flow": dynamic(() => import("@/components/visualizers/AuthFlowViz")),
+  "rate-limiting": dynamic(() => import("@/components/visualizers/RateLimitingViz")),
+  "api-gateway": dynamic(() => import("@/components/visualizers/ApiGatewayViz")),
+  "cdn-advanced": dynamic(() => import("@/components/visualizers/CdnAdvancedViz")),
+  "db-replication": dynamic(() => import("@/components/visualizers/DbReplicationViz")),
+  "distributed-tx": dynamic(() => import("@/components/visualizers/DistributedTxViz")),
+  "websocket": dynamic(() => import("@/components/visualizers/WebSocketViz")),
+  "stream-processing": dynamic(() => import("@/components/visualizers/StreamProcessingViz")),
+  "distributed-lock": dynamic(() => import("@/components/visualizers/DistributedLockViz")),
+  "object-storage": dynamic(() => import("@/components/visualizers/ObjectStorageViz")),
+  "monitoring": dynamic(() => import("@/components/visualizers/MonitoringViz")),
+  "distributed-tracing": dynamic(() => import("@/components/visualizers/DistributedTracingViz")),
+  "docker": dynamic(() => import("@/components/visualizers/DockerViz")),
+  "kubernetes": dynamic(() => import("@/components/visualizers/KubernetesViz")),
+  "ci-cd": dynamic(() => import("@/components/visualizers/CiCdViz")),
+  "vector-db": dynamic(() => import("@/components/visualizers/VectorDbViz")),
+  "rag": dynamic(() => import("@/components/visualizers/RagViz")),
+  "ai-agent": dynamic(() => import("@/components/visualizers/AiAgentViz")),
+  "design-whatsapp": dynamic(() => import("@/components/visualizers/DesignWhatsAppViz")),
+  "design-instagram": dynamic(() => import("@/components/visualizers/DesignInstagramViz")),
+  "design-youtube": dynamic(() => import("@/components/visualizers/DesignYouTubeViz")),
+  "design-uber": dynamic(() => import("@/components/visualizers/DesignUberViz")),
+  "design-netflix": dynamic(() => import("@/components/visualizers/DesignNetflixViz")),
+  "design-discord": dynamic(() => import("@/components/visualizers/DesignDiscordViz")),
+  "design-google-docs": dynamic(() => import("@/components/visualizers/DesignGoogleDocsViz")),
+  "design-zoom": dynamic(() => import("@/components/visualizers/DesignZoomViz")),
+  "design-twitter": dynamic(() => import("@/components/visualizers/DesignTwitterViz")),
   "none": () => <div className="p-12 text-center text-zinc-500 bg-white/5 rounded-xl border border-white/10 border-dashed">No visualizer available for this topic yet.</div>
 };
+
+const allTopics = [...topics, ...topicsV2, ...topicsV3];
 
 type TabId = "definition" | "real-world" | "pros-cons" | "visualizer" | "interview-qa";
 
@@ -33,19 +69,27 @@ const tabs: { id: TabId; label: string; icon: string }[] = [
 
 export default function TopicPage({ params }: { params: { slug: string } }) {
   const [activeTab, setActiveTab] = useState<TabId>("definition");
-  const topic = topics.find((t) => t.slug === params.slug);
+  const topic = allTopics.find((t) => t.slug === params.slug);
   const setActiveTopic = useSidebarStore(state => state.setActiveTopic);
+  const { addXp, completedTopics, markTopicCompleted } = useGamificationStore();
 
   useEffect(() => {
     setActiveTopic(params.slug);
+    
+    // Gamification XP for first visit
+    if (topic && !completedTopics.includes(topic.id)) {
+      addXp(50, "Discovered new topic!");
+      markTopicCompleted(topic.id);
+    }
+    
     return () => setActiveTopic(null);
-  }, [params.slug, setActiveTopic]);
+  }, [params.slug, setActiveTopic, topic, completedTopics, addXp, markTopicCompleted]);
 
   if (!topic) {
     notFound();
   }
 
-  const VisualizerComponent = visualizers[topic.visualizerType] || visualizers["none"];
+  const VisualizerComponent = visualizers[topic.visualizerType as keyof typeof visualizers] || visualizers["none"];
 
   return (
     <div className="container mx-auto px-4 py-8 lg:py-12 max-w-6xl">
@@ -105,7 +149,9 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
       </div>
 
       {/* Tab Content */}
-      <div className="min-h-[500px]">
+      <div className="min-h-[500px] relative">
+        <AiExplainerButton topicTitle={topic.title} currentContext={activeTab} />
+        
         <AnimatePresence mode="wait">
           
           {activeTab === "definition" && (
@@ -128,12 +174,12 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
                 <div>
                   <h3 className="text-2xl font-bold text-white mb-6">Core Concepts</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {topic.concepts.map((concept) => (
+                    {topic.concepts.map((concept: any) => (
                       <div key={concept.id} className="p-6 rounded-xl bg-black/20 border border-white/5">
                         <h4 className="text-xl font-bold text-primary mb-2">{concept.title}</h4>
                         <p className="text-zinc-400 text-sm mb-4">{concept.description}</p>
                         <div className="space-y-2">
-                          {concept.howItWorks.slice(0, 3).map((step, i) => (
+                          {concept.howItWorks.slice(0, 3).map((step: string, i: number) => (
                             <div key={i} className="flex gap-3 text-sm text-zinc-300">
                               <span className="text-primary font-bold">{i + 1}.</span>
                               <span>{step}</span>
@@ -174,7 +220,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
                   <span>🎯</span> Common Use Cases
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {topic.useCases.map((useCase, i) => (
+                  {topic.useCases.map((useCase: string, i: number) => (
                     <div key={i} className="p-4 rounded-lg bg-white/5 border border-white/5 flex items-start gap-3">
                       <span className="text-secondary mt-1">✓</span>
                       <span className="text-zinc-300">{useCase}</span>
@@ -200,7 +246,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
                     <span className="bg-green-500/20 p-2 rounded-lg">👍</span> Advantages
                   </h3>
                   <ul className="space-y-4">
-                    {topic.advantages.map((adv, i) => (
+                    {topic.advantages.map((adv: string, i: number) => (
                       <li key={i} className="flex gap-3 text-zinc-300">
                         <span className="text-green-400 mt-1">✓</span>
                         <span className="leading-relaxed">{adv}</span>
@@ -216,7 +262,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
                     <span className="bg-red-500/20 p-2 rounded-lg">👎</span> Disadvantages
                   </h3>
                   <ul className="space-y-4">
-                    {topic.disadvantages.map((dis, i) => (
+                    {topic.disadvantages.map((dis: string, i: number) => (
                       <li key={i} className="flex gap-3 text-zinc-300">
                         <span className="text-red-400 mt-1">✕</span>
                         <span className="leading-relaxed">{dis}</span>

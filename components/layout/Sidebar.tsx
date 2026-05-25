@@ -4,18 +4,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSidebarStore } from "@/store/useSidebarStore";
-import { sidebarSections } from "@/data/topics";
+import { topics } from "@/data/topics";
+import { topicsV2 } from "@/data/topics-v2";
+import { topicsV3 } from "@/data/topics-v3";
 import { cn } from "@/lib/cn";
 import { useEffect } from "react";
+import { useGamificationStore } from "@/store/useGamificationStore";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { 
     isOpen, 
-    toggleCategory, 
+    toggleCategory,
     isCategoryExpanded, 
     setSidebarOpen 
   } = useSidebarStore();
+  const { completedTopics } = useGamificationStore();
 
   // Close sidebar on mobile when route changes
   useEffect(() => {
@@ -38,8 +42,35 @@ export default function Sidebar() {
     }
   }, [pathname, setSidebarOpen]);
 
-  const totalTopics = sidebarSections.reduce((acc, section) => acc + section.topics.length, 0);
-  const learnedTopics = 2; // Mock progress
+  const allTopics = [...topics, ...topicsV2, ...topicsV3];
+  
+  const sidebarSections = [
+    { id: 'basics', label: 'Basics', icon: '🚀' },
+    { id: 'scalability', label: 'Scalability', icon: '📈' },
+    { id: 'networking', label: 'Networking', icon: '🔌' },
+    { id: 'database', label: 'Database', icon: '🗄️' },
+    { id: 'load-balancing', label: 'Load Balancing', icon: '⚖️' },
+    { id: 'rate-limiting', label: 'Rate Limiting', icon: '🚦' },
+    { id: 'caching', label: 'Caching', icon: '⚡' },
+    { id: 'cdn', label: 'CDN', icon: '🌍' },
+    { id: 'messaging-queue', label: 'Messaging Queue', icon: '📨' },
+    { id: 'real-time', label: 'Real-Time', icon: '⚡' },
+    { id: 'distributed-systems', label: 'Distributed Systems', icon: '🌐' },
+    { id: 'microservices', label: 'Microservices', icon: '🏗️' },
+    { id: 'storage', label: 'Storage', icon: '💾' },
+    { id: 'observability', label: 'Observability', icon: '📡' },
+    { id: 'devops', label: 'DevOps', icon: '🔧' },
+    { id: 'ai-ml', label: 'AI / ML', icon: '🤖' },
+    { id: 'cap-theorem', label: 'CAP Theorem', icon: '📐' },
+    { id: 'auth-security', label: 'Auth & Security', icon: '🔐' },
+    { id: 'case-studies', label: 'System Design Case Studies', icon: '💼' }
+  ].map(section => ({
+    ...section,
+    topics: allTopics.filter(t => t.category === section.id).map(t => ({ slug: t.slug, title: t.title, emoji: t.emoji }))
+  }));
+
+  const totalTopics = allTopics.length;
+  const learnedTopics = completedTopics.length;
 
   return (
     <AnimatePresence mode="wait">

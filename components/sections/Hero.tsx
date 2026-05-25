@@ -48,7 +48,7 @@ export default function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              <span className="text-xs font-mono text-zinc-300">v1.0 — Work in Progress</span>
+              <span className="text-xs font-mono text-zinc-300">v2.0 — AI-Powered Learning Platform</span>
             </motion.div>
 
             <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl font-bold tracking-tight mb-4 leading-[1.1]">
@@ -79,21 +79,21 @@ export default function Hero() {
             <motion.div variants={fadeUp} className="mt-12 pt-8 border-t border-white/10 flex items-center gap-8 w-full">
               <div>
                 <div className="text-3xl font-bold text-white mb-1 font-mono">
-                  <AnimatedCounter value={6} />
+                  <AnimatedCounter value={37} />
                 </div>
-                <div className="text-sm text-zinc-500 font-medium">Core Topics</div>
+                <div className="text-sm text-zinc-500 font-medium">Topics</div>
               </div>
               <div className="w-px h-12 bg-white/10"></div>
               <div>
                 <div className="text-3xl font-bold text-white mb-1 font-mono">
-                  <AnimatedCounter value={5} />
+                  <AnimatedCounter value={39} />
                 </div>
                 <div className="text-sm text-zinc-500 font-medium">Visualizers</div>
               </div>
               <div className="w-px h-12 bg-white/10 hidden sm:block"></div>
               <div className="hidden sm:block">
-                <div className="text-3xl font-bold text-white mb-1 font-mono">∞</div>
-                <div className="text-sm text-zinc-500 font-medium">Concepts</div>
+                <div className="text-3xl font-bold text-white mb-1 font-mono">AI</div>
+                <div className="text-sm text-zinc-500 font-medium">Powered</div>
               </div>
             </motion.div>
           </motion.div>

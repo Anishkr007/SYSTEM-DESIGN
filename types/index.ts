@@ -6,6 +6,37 @@ export type VisualizerType =
   | 'db-sharding'
   | 'envelope-calc'
   | 'arch-playground'
+  | 'url-shortener'
+  | 'notification-system'
+  | 'kafka'
+  | 'caching-simulator'
+  | 'auth-flow'
+  | 'rate-limiting'
+  | 'api-gateway'
+  | 'cdn-advanced'
+  | 'db-replication'
+  | 'distributed-tx'
+  | 'websocket'
+  | 'stream-processing'
+  | 'distributed-lock'
+  | 'object-storage'
+  | 'monitoring'
+  | 'distributed-tracing'
+  | 'docker'
+  | 'kubernetes'
+  | 'ci-cd'
+  | 'vector-db'
+  | 'rag'
+  | 'ai-agent'
+  | 'design-whatsapp'
+  | 'design-instagram'
+  | 'design-youtube'
+  | 'design-uber'
+  | 'design-netflix'
+  | 'design-discord'
+  | 'design-google-docs'
+  | 'design-zoom'
+  | 'design-twitter'
   | 'none'
 
 export type SidebarCategory =
@@ -19,6 +50,15 @@ export type SidebarCategory =
   | 'cdn'
   | 'microservices'
   | 'cap-theorem'
+  | 'case-studies'
+  | 'auth-security'
+  | 'rate-limiting'
+  | 'networking'
+  | 'real-time'
+  | 'storage'
+  | 'observability'
+  | 'devops'
+  | 'ai-ml'
 
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced'
 export type QuestionDifficulty = 'Easy' | 'Medium' | 'Hard'
@@ -77,4 +117,13 @@ export interface SidebarTopicLink {
   slug: string
   title: string
   emoji: string
+}
+
+export interface Achievement {
+  id: string
+  title: string
+  description: string
+  icon: string
+  xpAward: number
+  unlockedAt?: string
 }

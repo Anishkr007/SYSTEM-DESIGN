@@ -3,24 +3,44 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { topics } from "@/data/topics";
+import { topicsV2 } from "@/data/topics-v2";
+import { topicsV3 } from "@/data/topics-v3";
 import GlowCard from "@/components/ui/GlowCard";
 import NeonBadge from "@/components/ui/NeonBadge";
 import Link from "next/link";
 import { SidebarCategory } from "@/types";
+import { useSidebarStore } from "@/store/useSidebarStore";
+import { useRouter } from "next/navigation";
+
+const allTopics = [...topics, ...topicsV2, ...topicsV3];
 
 const filters: { label: string; value: SidebarCategory | "all" }[] = [
   { label: "All Topics", value: "all" },
   { label: "Basics", value: "basics" },
+  { label: "Scalability", value: "scalability" },
+  { label: "Networking", value: "networking" },
   { label: "Database", value: "database" },
   { label: "Load Balancing", value: "load-balancing" },
-  { label: "Microservices", value: "microservices" },
+  { label: "Rate Limiting", value: "rate-limiting" },
+  { label: "Caching", value: "caching" },
+  { label: "CDN", value: "cdn" },
+  { label: "Messaging", value: "messaging-queue" },
+  { label: "Real-Time", value: "real-time" },
   { label: "Distributed Systems", value: "distributed-systems" },
+  { label: "Microservices", value: "microservices" },
+  { label: "Storage", value: "storage" },
+  { label: "Observability", value: "observability" },
+  { label: "DevOps", value: "devops" },
+  { label: "AI / ML", value: "ai-ml" },
+  { label: "CAP Theorem", value: "cap-theorem" },
+  { label: "Auth & Security", value: "auth-security" },
+  { label: "System Design Case Studies", value: "case-studies" },
 ];
 
 export default function TopicsGrid() {
   const [activeFilter, setActiveFilter] = useState<SidebarCategory | "all">("all");
 
-  const filteredTopics = topics.filter(
+  const filteredTopics = allTopics.filter(
     (topic) => activeFilter === "all" || topic.category === activeFilter
   );
 
@@ -35,10 +55,10 @@ export default function TopicsGrid() {
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-secondary"></span>
               </span>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">All Topics</h2>
-              <NeonBadge variant="secondary" className="ml-2 font-mono">{topics.length}</NeonBadge>
+              <NeonBadge variant="secondary" className="ml-2 font-mono">{allTopics.length}</NeonBadge>
             </div>
             <p className="text-zinc-400 max-w-xl">
-              Master the core concepts of system design through interactive visualizations and real-world examples.
+              Master the core concepts of system design through interactive visualizations, real-world case studies, and AI-powered explanations.
             </p>
           </div>
 
@@ -133,3 +153,4 @@ export default function TopicsGrid() {
     </section>
   );
 }
+
